@@ -1,0 +1,1 @@
+input tokens -> embeddings -> positional encoding -> masked multi-head attention -> add & norm -> feedfroward -> add & norm -> LM head (linear + softmax) -> output probabilities
