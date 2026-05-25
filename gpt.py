@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 
+
 class TokenEmbedding(nn.Module):
     """
     This class converts the tokens into vector space embeddings.
@@ -49,8 +50,43 @@ class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, h:int):
         super().__init__()
 
+        self.W_Q = nn.Linear(d_model, d_model)
+        self.W_K = nn.Linear(d_model, d_model)
+        self.W_V = nn.Linear(d_model, d_model)
+        self.W_O = nn.Linear(d_model, d_model)
+
+        self.h = h
+        self.d_k = d_model//h
+
     def forward(self,x):
-        pass
+        batch, seq_len, d_model = x.shape
+
+        Q = self.W_Q(x)
+        K = self.W_K(x)
+        V = self.W_V(x)
+
+        Q = Q.view(batch, seq_len, self.h, self.d_k)
+        K = K.view(batch, seq_len, self.h, self.d_k)
+        V = V.view(batch, seq_len, self.h, self.d_k)
+
+        Q = Q.transpose(1,2)
+        K = K.transpose(1,2)
+        V = V.transpose(1,2)
+
+        scores = torch.matmul(Q, K.transpose(-1,-2))/torch.sqrt(torch.tensor(self.d_k, dtype = torch.float32))
+
+        upper_mask = torch.triu(torch.ones_like(scores), diagonal= 1) == 1
+
+        scores = scores.masked_fill(upper_mask, float("-inf"))
+        scores = torch.softmax(scores, dim =-1)
+
+        attention = torch.matmul(scores, V)
+        attention = attention.transpose(1,2).contiguous()
+        attention = attention.view(batch, seq_len, d_model)
+
+        multi_head = self.W_O(attention)
+
+        return multi_head
 
 class FeedForward(nn.Module):
     """
@@ -97,14 +133,20 @@ class GPT(nn.Module):
 if __name__ == "__main__":
     import torch
     data = torch.randint(32, (4,8))
-    tokenizer = TokenEmbedding(32, 32)
+    tokenizer = TokenEmbedding(32, 512)
     output = tokenizer(data)
 
-    assert output.shape == (4, 8, 32)
+    assert output.shape == (4, 8, 512)
     print("tokeninzer passed")
     
-    pe = PositionalEncoding(100, 32)
+    pe = PositionalEncoding(100, 512)
     pe_output = pe(output)
 
-    assert pe_output.shape == (4, 8, 32)
+    assert pe_output.shape == (4, 8, 512)
     print("positional encoder passed")
+
+    mha = MultiHeadAttention(512, 8)
+    mha_output = mha(pe_output)
+
+    assert mha_output.shape == (4, 8, 512)
+    print("mha  passed")
