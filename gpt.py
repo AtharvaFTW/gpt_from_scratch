@@ -42,7 +42,7 @@ class PositionalEncoding(nn.Module):
         
         return x
 
-class MultiHeadAttention(nn.Module):
+class MaskedMultiHeadAttention(nn.Module):
     """
     Computes parallell scaled dot-product attention over multiple heads
     to allow the model to jointly attend to information from different representation subspaces.
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     assert pe_output.shape == (4, 8, 512)
     print("positional encoder passed")
 
-    mha = MultiHeadAttention(512, 8)
+    mha = MaskedMultiHeadAttention(512, 8)
     mha_output = mha(pe_output)
 
     assert mha_output.shape == (4, 8, 512)
