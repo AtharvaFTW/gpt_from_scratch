@@ -1,4 +1,4 @@
-from torch.ao.nn.quantized import LayerNorm
+
 import torch
 from torch import nn
 
@@ -137,9 +137,12 @@ class LMHead(nn.Module):
     """
     def __init__(self, d_model, vocab_size:int):
         super().__init__()
+        self.linear_layer = nn.Linear(d_model, vocab_size)
 
     def forward(self,x):
-        pass
+        x = self.linear_layer(x)
+
+        return x
 
 class GPT(nn.Module):
     """
@@ -147,11 +150,23 @@ class GPT(nn.Module):
     """
     def __init__(self, vocab_size:int, d_model, h, N, context_len: int):
         super().__init__()
+        self.embed = TokenEmbedding(vocab_size, d_model)
+        self.pe = PositionalEncoding(context_len,d_model )
+        self.blocks = nn.ModuleList([Decoder(d_model, h) for _ in range(N)])
+        self.head = LMHead(d_model, vocab_size)
 
     def forward(self,x):
-        pass
+        
+        x = self.embed(x)
+        x = self.pe(x)
 
+        for block in self.blocks:
+            x = block(x)
 
+        x = self.head(x)
+
+        return x
+       
 if __name__ == "__main__":
     import torch
     data = torch.randint(32, (4,8))
@@ -184,3 +199,15 @@ if __name__ == "__main__":
 
     assert deco_output.shape == (4, 8, 512)
     print("deco passed")
+
+    lm = LMHead(512, 32)
+    lm_output = lm(deco_output)
+
+    assert lm_output.shape == (4, 8, 32)
+    print("lmhead passed")
+
+    model = GPT(32, 512, 8, 4, 100)
+    model_output = model(data)
+
+    assert model_output.shape == (4, 8, 32)
+    print("model passed")
