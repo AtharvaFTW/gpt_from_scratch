@@ -1,3 +1,4 @@
+from torch.ao.nn.quantized import LayerNorm
 import torch
 from torch import nn
 
@@ -115,8 +116,20 @@ class Decoder(nn.Module):
     def __init__(self, d_model, h:int):
         super().__init__()
 
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+
+        self.masked_attention = MaskedMultiHeadAttention(d_model, h)
+        self.feed = FeedForward(d_model)
+
     def forward(self,x):
-        pass
+       x = x + self.masked_attention(x)
+       x = self.norm1(x)
+
+       x = x + self.feed(x)
+       x = self.norm2(x)
+
+       return x
 
 class LMHead(nn.Module):
     """
@@ -165,3 +178,9 @@ if __name__ == "__main__":
 
     assert ff_output.shape == (4, 8, 512)
     print("ff passed")
+
+    deco = Decoder(512, 8)
+    deco_output = deco(pe_output)
+
+    assert deco_output.shape == (4, 8, 512)
+    print("deco passed")
