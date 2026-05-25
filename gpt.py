@@ -95,8 +95,17 @@ class FeedForward(nn.Module):
     def __init__(self, d_model):
         super().__init__()
 
+        d_ff = 4 * d_model
+        self.feed = nn.Sequential(
+            nn.Linear(d_model, d_ff),
+            nn.ReLU(),
+            nn.Linear(d_ff, d_model)
+                    )
+
     def forward(self,x):
-        pass
+        x = self.feed(x)
+
+        return x
 
 class Decoder(nn.Module):
     """
@@ -150,3 +159,9 @@ if __name__ == "__main__":
 
     assert mha_output.shape == (4, 8, 512)
     print("mha  passed")
+
+    ff = FeedForward(512)
+    ff_output = ff(mha_output)
+
+    assert ff_output.shape == (4, 8, 512)
+    print("ff passed")
