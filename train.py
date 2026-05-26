@@ -17,14 +17,14 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
     D_MODEL = 512
     H = 8
     N = 6
-    CONTEXT_LEN = 128
-    BATCH_SIZE = 64
+    CONTEXT_LEN = 256
+    BATCH_SIZE = 128
 
     train_data, val_data = get_tokens(data_path)
     
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr = 1e-3)
+    optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
     loss_fn = nn.CrossEntropyLoss()
 
     for epoch in tqdm(range(epochs), desc= f"GPT is Training on {data_path}"):
@@ -62,7 +62,7 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
 
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
-            torch.save(model.state_dict(), f"get_epoch_{epoch}.pt")
+        torch.save(model.state_dict(), f"weights.pt")
 
 
 if __name__ == "__main__":
