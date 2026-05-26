@@ -18,9 +18,6 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
     H = 8
     N = 6
     CONTEXT_LEN = 128
-
-    # Training Params
-    EPOCHS = epochs
     BATCH_SIZE = 64
 
     train_data, val_data = get_tokens(data_path)
@@ -65,6 +62,11 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
 
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
+            torch.save(model.state_dict(), f"get_epoch_{epoch}.pt")
+
+
+if __name__ == "__main__":
+    training("shakespeare.txt")
 
 
 
