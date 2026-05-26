@@ -145,3 +145,9 @@ cython_debug/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+
+#local only
+/fetch_weeknd.py
+/extract.py
+/weeknd.json
