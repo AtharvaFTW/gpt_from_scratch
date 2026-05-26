@@ -56,6 +56,8 @@ class MaskedMultiHeadAttention(nn.Module):
         self.W_V = nn.Linear(d_model, d_model)
         self.W_O = nn.Linear(d_model, d_model)
 
+        self.drop = nn.Dropout(p=0.1)
+
         self.h = h
         self.d_k = d_model//h
 
@@ -81,6 +83,8 @@ class MaskedMultiHeadAttention(nn.Module):
         scores = scores.masked_fill(upper_mask, float("-inf"))
         scores = torch.softmax(scores, dim =-1)
 
+        scores = self.drop(scores) # We drop few nodes during training so that no single neuron can over-rely on specific patterns
+
         attention = torch.matmul(scores, V)
         attention = attention.transpose(1,2).contiguous()
         attention = attention.view(batch, seq_len, d_model)
@@ -88,6 +92,7 @@ class MaskedMultiHeadAttention(nn.Module):
         multi_head = self.W_O(attention)
 
         return multi_head
+
 
 class FeedForward(nn.Module):
     """
@@ -100,6 +105,7 @@ class FeedForward(nn.Module):
         self.feed = nn.Sequential(
             nn.Linear(d_model, d_ff),
             nn.ReLU(),
+            nn.Dropout(p=0.1),
             nn.Linear(d_ff, d_model)
                     )
 
@@ -119,14 +125,18 @@ class Decoder(nn.Module):
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
+        self.drop = nn.Dropout(p= 0.1)
+
         self.masked_attention = MaskedMultiHeadAttention(d_model, h)
         self.feed = FeedForward(d_model)
 
     def forward(self,x):
        x = x + self.masked_attention(x)
+       x = self.drop(x)
        x = self.norm1(x)
 
        x = x + self.feed(x)
+       x = self.drop(x)
        x = self.norm2(x)
 
        return x

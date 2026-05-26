@@ -62,7 +62,7 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
 
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
-        torch.save(model.state_dict(), f"weights.pt")
+            torch.save(model.state_dict(), f"weight_at_{epoch}.pt")
 
 
 if __name__ == "__main__":
