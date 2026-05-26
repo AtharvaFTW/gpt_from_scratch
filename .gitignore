@@ -151,3 +151,4 @@ Thumbs.db
 /fetch_weeknd.py
 /extract.py
 /weeknd.json
+weights/
