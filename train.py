@@ -66,7 +66,7 @@ def training(data_path:str,epochs:int= 3000, device= DEVICE):
         torch.save(model.state_dict(),f"final_weights.pt")
 
 if __name__ == "__main__":
-    training("shakespeare.txt")
+    training(r"data/shakespeare.txt")
 
 
 
