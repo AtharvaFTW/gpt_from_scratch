@@ -8,7 +8,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 train_data, val_data = get_tokens("shakespeare.txt")
 
-def training(data_path:str,epochs:int= 1000, device= DEVICE):
+def training(data_path:str,epochs:int= 3000, device= DEVICE):
 
     torch.manual_seed(42)
     
@@ -62,8 +62,8 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
 
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
-            torch.save(model.state_dict(), f"weight_at_{epoch}.pt")
-
+            torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
+        torch.save(model.state_dict(),f"final_weights.pt")
 
 if __name__ == "__main__":
     training("shakespeare.txt")
