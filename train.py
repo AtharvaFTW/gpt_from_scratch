@@ -17,7 +17,7 @@ def training(data_path:str,epochs:int= 1000, device= DEVICE):
     D_MODEL = 512
     H = 8
     N = 6
-    CONTEXT_LEN = 256
+    CONTEXT_LEN = 128
     BATCH_SIZE = 64
 
     train_data, val_data = get_tokens(data_path)
