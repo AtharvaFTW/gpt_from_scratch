@@ -38,5 +38,7 @@ if __name__ == "__main__":
     train, val = get_tokens(path)
 
     x,y = get_batch(train, 4, 8)
+    print("train data", train.shape)
+    print("val data", val.shape)
     print("X:", x.shape)
     print("y:", y.shape)
