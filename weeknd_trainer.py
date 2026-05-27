@@ -58,7 +58,7 @@ def weeknd_training(data_path:str,epochs:int= 3000, device= DEVICE):
             tyt_bz, tyt_cl = y_test.shape
 
             test_loss = loss_fn(test_logits.view(typ_bz * typ_cl, typ_vc), y_test.view(tyt_bz * tyt_cl))
-            
+
         wandb.log({
                 "epoch": epoch,
                 "train_loss": loss,
@@ -70,3 +70,4 @@ def weeknd_training(data_path:str,epochs:int= 3000, device= DEVICE):
             torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
     torch.save(model.state_dict(),f"final_weights.pt")
     wandb.finish()
+    
