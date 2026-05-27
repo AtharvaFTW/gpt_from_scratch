@@ -1,4 +1,4 @@
-from torch.utils._cxx_pytree import args
+
 import torch
 from components import GPT
 import tiktoken
@@ -11,13 +11,10 @@ N = 6
 CONTEXT_LEN = 128
 BATCH_SIZE = 64
 
-model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(DEVICE)
-model.load_state_dict(torch.load("weights\weights_at_900.pt"))
-
-enc = tiktoken.get_encoding("gpt2")
 
 
-def generate(model, seed_text, max_new_tokens, context_len, device = DEVICE):
+
+def generate(model, seed_text, max_new_tokens, context_len, device = DEVICE, enc = None):
 
     context = enc.encode(seed_text)
     context = torch.tensor(context, dtype= torch.long).unsqueeze(dim=0).to(device)
@@ -38,7 +35,34 @@ def generate(model, seed_text, max_new_tokens, context_len, device = DEVICE):
 
     return res
 
+def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decode, device = DEVICE):
+
+    context = encode(seed_text)
+    context = torch.tensor(context, dtype = torch.long).unsqueeze(dim =0).to(device)
+    model.eval()
+
+    for i in range(max_new_tokens):
+
+        logits = model(context[:, -context_len:])
+        probs = torch.softmax(logits[:, -1, :], dim = -1)
+        next_token = torch.multinomial(probs, num_samples=1)
+
+        context = torch.cat([context, next_token], dim = 1)
+
+    context = context.squeeze(0)
+    context = context.tolist()
+
+    res = decode(context)
+
+    return res
+
+
 if __name__ == "__main__":
-   
-    output = generate(model, "To be or not", max_new_tokens= 100, context_len= CONTEXT_LEN)
+    from data import get_tokens_character
+    model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(DEVICE)
+    model.load_state_dict(torch.load("weeknd_weights"))
+
+    _ , _, _, encode, decode = get_tokens_character(r"data/weeknd.txt")
+    # enc = tiktoken.get_encoding("gpt2")
+    output = weeknd_generate(model, "I am intoxicated", max_new_tokens= 1000, context_len= CONTEXT_LEN, encode = encode, decode = decode)
     print(output)
