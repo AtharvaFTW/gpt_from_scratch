@@ -68,7 +68,13 @@ def weeknd_training(data_path:str,epochs:int= 3000, device= DEVICE):
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
             torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
+            artifact_training = wandb.Artifact(f"weeknd-weights_at_{epoch}" ,type = "model")
+            artifact_training.add_file(f"weights_at_{epoch}.pt")
+            wandb.log_artifact(artifact_training)
     torch.save(model.state_dict(),f"final_weights.pt")
+    artifact = wandb.Artifact("weeknd-weights" ,type = "model")
+    artifact.add_file('final_weights.pt')
+    wandb.log_artifact(artifact)
     wandb.finish()
 
 
