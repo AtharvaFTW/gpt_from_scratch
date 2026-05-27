@@ -79,4 +79,4 @@ def weeknd_training(data_path:str,epochs:int= 3000, device= DEVICE):
 
 
 if __name__ == "__main__":
-    weeknd_training(r"data/weeknd.txt", epochs= 3000, device = DEVICE)
+    weeknd_training(r"data/weeknd.txt", epochs= 5000, device = DEVICE)
