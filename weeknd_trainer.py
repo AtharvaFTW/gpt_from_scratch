@@ -14,11 +14,11 @@ def weeknd_training(data_path:str,epochs:int= 3000, device= DEVICE):
 
     # Initializing Params
     VOCAB_SIZE = vocab_size
-    D_MODEL = 512
-    H = 8
-    N = 6
-    CONTEXT_LEN = 128
-    BATCH_SIZE = 64
+    D_MODEL = 768
+    H = 12
+    N = 8
+    CONTEXT_LEN = 256
+    BATCH_SIZE = 128
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
