@@ -23,6 +23,35 @@ def get_tokens(path: str):
     return train_tensor, val_tensor
 
 
+def get_tokens_character(path):
+    """
+    This function creates token embeddigns with custom vocab for small data corpus.
+    """
+
+    with open(path, "r", encoding= "utf-8") as f:
+        corpus = f.read()
+
+    chars = sorted(set(corpus))
+    vocab_size = len(chars)
+
+    char_to_idx = {ch: i for i,ch in enumerate(chars)}
+    idx_to_char = {i: ch for i,ch in enumerate(chars)}
+
+    def encode(text):
+        return [char_to_idx[ch] for ch in text]
+
+    def decode(tokens):
+        return "".join([idx_to_char[i] for i in tokens])
+
+    encoded_text = encode(corpus)
+    tokens = torch.tensor(encoded_text, dtype = torch.long)
+
+    train_tensor = tokens[:int((0.9) * len(tokens))]
+    val_tensor = tokens[int((0.9) * len(tokens)):]
+
+    return train_tensor, val_tensor , vocab_size, encode, decode
+
+
 def get_batch(data: torch.Tensor, batch_size:int, context_len:int):
     ix = torch.randint(len(data) - context_len, (batch_size,))
 
@@ -34,11 +63,11 @@ def get_batch(data: torch.Tensor, batch_size:int, context_len:int):
 
 if __name__ == "__main__":
 
-    path = "shakespeare.txt"
-    train, val = get_tokens(path)
-
-    x,y = get_batch(train, 4, 8)
-    print("train data", train.shape)
-    print("val data", val.shape)
-    print("X:", x.shape)
-    print("y:", y.shape)
+    path = r"data/weeknd.txt"
+    train_tensor,val_tensor, vocab_size, encode, decode = get_tokens_character(path)
+    print(f"Vocab size: {vocab_size}")
+    print(f"Train Tensor len: {len(train_tensor)}")
+    print(f"Val Tensor len: {len(val_tensor)}")
+    print(f"Sample encode: {encode('Take me back to LA')}")
+    print(f"Sample decode: {decode(encode('Take me back to LA'))}")
+    
