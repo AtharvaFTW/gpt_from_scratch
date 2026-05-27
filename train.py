@@ -3,13 +3,11 @@ from torch import nn
 from components import GPT
 from data import get_tokens , get_batch
 from tqdm.auto import tqdm
+import wandb
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-train_data, val_data = get_tokens("shakespeare.txt")
-
-def training(data_path:str,epochs:int= 3000, device= DEVICE):
-
+def shakespeare_training(data_path:str,epochs:int= 3000, device= DEVICE):
     torch.manual_seed(42)
     
     # Initializing Params
@@ -27,7 +25,8 @@ def training(data_path:str,epochs:int= 3000, device= DEVICE):
     optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
     loss_fn = nn.CrossEntropyLoss()
 
-    for epoch in tqdm(range(epochs), desc= f"GPT is Training on {data_path}"):
+    wandb.init(project ="ShakespeareGPT")
+    for epoch in tqdm(range(epochs)):
 
         model.train()
 
@@ -60,13 +59,21 @@ def training(data_path:str,epochs:int= 3000, device= DEVICE):
 
             test_loss = loss_fn(test_logits.view(typ_bz * typ_cl, typ_vc), y_test.view(tyt_bz * tyt_cl))
 
+        wandb.log({
+                "epoch": epoch,
+                "train_loss": loss,
+                "test_loss": test_loss   
+            })
+
         if epoch % 100 == 0:
+
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
             torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
-        torch.save(model.state_dict(),f"final_weights.pt")
+    torch.save(model.state_dict(),f"final_weights.pt")
+    wandb.finish()
 
 if __name__ == "__main__":
-    training(r"data/shakespeare.txt")
+    shakespeare_training(r"data/shakespeare.txt")
 
 
 
