@@ -70,4 +70,7 @@ def weeknd_training(data_path:str,epochs:int= 3000, device= DEVICE):
             torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
     torch.save(model.state_dict(),f"final_weights.pt")
     wandb.finish()
-    
+
+
+if __name__ == "__main__":
+    weeknd_training(r"data/weeknd.txt", epochs= 3000, device = DEVICE)
