@@ -23,7 +23,7 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-3)
+    optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = epochs)
     loss_fn = nn.CrossEntropyLoss()
     
