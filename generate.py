@@ -63,7 +63,7 @@ if __name__ == "__main__":
     _ , _, vc, encode, decode = get_tokens_character(r"data/weeknd.txt")
 
     model = GPT(vocab_size= vc, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(DEVICE)
-    model.load_state_dict(torch.load("weeknd_weights.pt"))
+    model.load_state_dict(torch.load("final_weights.pt"))
 
     
     # enc = tiktoken.get_encoding("gpt2")

@@ -69,7 +69,7 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
         ten_percent = int(epochs * 0.10)
 
         if epoch % 100 == 0:
-            print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
+            tqdm.write(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
 
         if epoch % ten_percent == 0:
             torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
@@ -146,7 +146,7 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
         ten_percent = int(epochs * 0.10)
 
         if epoch % 100 == 0:
-            print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
+            tqdm.write(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
 
         if epoch % ten_percent == 0:
             torch.save(model.state_dict(), f"weights_at_{epoch}_word.pt")
