@@ -94,9 +94,10 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
+    optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-3)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     loss_fn = nn.CrossEntropyLoss()
-    
+
     wandb.init(project = "WeekndGPT")
     for epoch in tqdm(range(epochs)):
 
@@ -116,7 +117,7 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+        scheduler.step()
         model.eval()
 
         x_test, y_test = get_batch(val_data, batch_size= BATCH_SIZE, context_len= CONTEXT_LEN)
@@ -137,12 +138,17 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
                 "test_loss": test_loss   
             })
 
+        ten_percent = int(epochs * 0.10)
+
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
+
+        if epoch % ten_percent == 0:
             torch.save(model.state_dict(), f"weights_at_{epoch}_word.pt")
             artifact_training = wandb.Artifact(f"weights_at_{epoch}_word" ,type = "model")
             artifact_training.add_file(f"weights_at_{epoch}_word.pt")
             wandb.log_artifact(artifact_training)
+            
     torch.save(model.state_dict(),f"final_weights_word.pt")
     artifact = wandb.Artifact("weeknd-weights" ,type = "model")
     artifact.add_file('final_weights_word.pt')
