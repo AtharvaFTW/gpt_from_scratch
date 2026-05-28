@@ -59,10 +59,13 @@ def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decod
 
 if __name__ == "__main__":
     from data import get_tokens_character
-    model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(DEVICE)
-    model.load_state_dict(torch.load("weeknd_weights"))
 
-    _ , _, _, encode, decode = get_tokens_character(r"data/weeknd.txt")
+    _ , _, vc, encode, decode = get_tokens_character(r"data/weeknd.txt")
+
+    model = GPT(vocab_size= vc, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(DEVICE)
+    model.load_state_dict(torch.load("weeknd_weights.pt"))
+
+    
     # enc = tiktoken.get_encoding("gpt2")
     output = weeknd_generate(model, "I am intoxicated", max_new_tokens= 1000, context_len= CONTEXT_LEN, encode = encode, decode = decode)
     print(output)
