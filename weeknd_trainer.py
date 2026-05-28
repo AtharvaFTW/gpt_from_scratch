@@ -89,8 +89,8 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
     D_MODEL = 768
     H = 12
     N = 8
-    CONTEXT_LEN = 64
-    BATCH_SIZE = 128
+    CONTEXT_LEN = 128
+    BATCH_SIZE = 256
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
