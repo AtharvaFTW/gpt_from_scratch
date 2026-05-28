@@ -35,7 +35,7 @@ def generate(model, seed_text, max_new_tokens, context_len, device = DEVICE, enc
 
     return res
 
-def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decode, device = DEVICE):
+def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decode,temperature, device = DEVICE):
 
     context = encode(seed_text)
     context = torch.tensor(context, dtype = torch.long).unsqueeze(dim =0).to(device)
@@ -44,7 +44,7 @@ def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decod
     for i in range(max_new_tokens):
 
         logits = model(context[:, -context_len:])
-        probs = torch.softmax(logits[:, -1, :], dim = -1)
+        probs = torch.softmax(logits[:, -1, :] / temperature, dim = -1)
         next_token = torch.multinomial(probs, num_samples=1)
 
         context = torch.cat([context, next_token], dim = 1)
@@ -67,5 +67,5 @@ if __name__ == "__main__":
 
     
     # enc = tiktoken.get_encoding("gpt2")
-    output = weeknd_generate(model, "I am intoxicated", max_new_tokens= 1000, context_len= CONTEXT_LEN, encode = encode, decode = decode)
+    output = weeknd_generate(model, "I feel the night", max_new_tokens= 150, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
     print(output)
