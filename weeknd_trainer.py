@@ -15,15 +15,16 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
 
     # Initializing Params
     VOCAB_SIZE = vocab_size
-    D_MODEL = 768
-    H = 12
-    N = 8
+    D_MODEL = 1024
+    H = 16
+    N = 12
     CONTEXT_LEN = 256
     BATCH_SIZE = 128
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
+    optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-3)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = epochs)
     loss_fn = nn.CrossEntropyLoss()
     
     wandb.init(project = "WeekndGPT")
@@ -45,6 +46,7 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        scheduler.step()
 
         model.eval()
 
@@ -66,15 +68,20 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
                 "test_loss": test_loss   
             })
 
+        ten_percent = int(epochs * 0.10)
+
         if epoch % 100 == 0:
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
-            torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
-            artifact_training = wandb.Artifact(f"weeknd-weights_at_{epoch}" ,type = "model")
-            artifact_training.add_file(f"weights_at_{epoch}.pt")
+
+        if epoch % ten_percent == 0:
+            torch.save(model.state_dict(), f"weights_at_{epoch}_word.pt")
+            artifact_training = wandb.Artifact(f"weights_at_{epoch}_word" ,type = "model")
+            artifact_training.add_file(f"weights_at_{epoch}_word.pt")
             wandb.log_artifact(artifact_training)
-    torch.save(model.state_dict(),f"final_weights.pt")
+
+    torch.save(model.state_dict(),f"final_weights_word.pt")
     artifact = wandb.Artifact("weeknd-weights" ,type = "model")
-    artifact.add_file('final_weights.pt')
+    artifact.add_file('final_weights_word.pt')
     wandb.log_artifact(artifact)
     wandb.finish()
 
@@ -148,7 +155,7 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
             artifact_training = wandb.Artifact(f"weights_at_{epoch}_word" ,type = "model")
             artifact_training.add_file(f"weights_at_{epoch}_word.pt")
             wandb.log_artifact(artifact_training)
-            
+
     torch.save(model.state_dict(),f"final_weights_word.pt")
     artifact = wandb.Artifact("weeknd-weights" ,type = "model")
     artifact.add_file('final_weights_word.pt')
@@ -156,4 +163,6 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
     wandb.finish()
 
 if __name__ == "__main__":
-    weeknd_training_word(r"data/weeknd.txt", epochs= 5000, device = DEVICE)
+    path = r"data/weeknd.txt"
+    weeknd_training_character(path, epochs=3000, device = DEVICE)
+    
