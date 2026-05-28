@@ -67,5 +67,5 @@ if __name__ == "__main__":
 
     
     # enc = tiktoken.get_encoding("gpt2")
-    output = weeknd_generate(model, "I feel the night", max_new_tokens= 150, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
+    output = weeknd_generate(model, "My doctor told me to stop", max_new_tokens= 200, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
     print(output)
