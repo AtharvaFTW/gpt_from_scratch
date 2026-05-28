@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("seed", type = str)
+    parser.add_argument("--seed", type = str)
 
     args= parser.parse_args()
     from data import get_tokens_character
