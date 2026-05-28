@@ -19,7 +19,7 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
     H = 16
     N = 12
     CONTEXT_LEN = 256
-    BATCH_SIZE = 128
+    BATCH_SIZE = 64
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
