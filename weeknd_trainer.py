@@ -24,7 +24,6 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = epochs)
     loss_fn = nn.CrossEntropyLoss()
     
     wandb.init(project = "WeekndGPT")
@@ -46,7 +45,6 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        scheduler.step()
 
         model.eval()
 
@@ -74,14 +72,14 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
             print(f"Epoch {epoch} | Train Loss: {loss:.4f}, Test Loss: {test_loss:.4f} ")
 
         if epoch % ten_percent == 0:
-            torch.save(model.state_dict(), f"weights_at_{epoch}_word.pt")
-            artifact_training = wandb.Artifact(f"weights_at_{epoch}_word" ,type = "model")
-            artifact_training.add_file(f"weights_at_{epoch}_word.pt")
+            torch.save(model.state_dict(), f"weights_at_{epoch}.pt")
+            artifact_training = wandb.Artifact(f"weights_at_{epoch}" ,type = "model")
+            artifact_training.add_file(f"weights_at_{epoch}.pt")
             wandb.log_artifact(artifact_training)
 
-    torch.save(model.state_dict(),f"final_weights_word.pt")
+    torch.save(model.state_dict(),f"final_weights.pt")
     artifact = wandb.Artifact("weeknd-weights" ,type = "model")
-    artifact.add_file('final_weights_word.pt')
+    artifact.add_file('final_weights.pt')
     wandb.log_artifact(artifact)
     wandb.finish()
 
