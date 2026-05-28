@@ -60,7 +60,7 @@ def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decod
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser
+    parser = argparse.ArgumentParser()
 
     parser.add_argument("seed", type = str)
 
