@@ -58,6 +58,13 @@ def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decod
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser
+
+    parser.add_argument("seed", type = str)
+
+    args= parser.parse_args()
     from data import get_tokens_character
 
     _ , _, vc, encode, decode = get_tokens_character(r"data/weeknd.txt")
@@ -67,5 +74,5 @@ if __name__ == "__main__":
 
     
     # enc = tiktoken.get_encoding("gpt2")
-    output = weeknd_generate(model, "My doctor told me to stop", max_new_tokens= 200, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
+    output = weeknd_generate(model, args.seed, max_new_tokens= 200, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
     print(output)
