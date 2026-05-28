@@ -86,9 +86,9 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
 
     # Initializing Params
     VOCAB_SIZE = vocab_size
-    D_MODEL = 1024
-    H = 16
-    N = 8
+    D_MODEL = 768
+    H = 12
+    N = 10
     CONTEXT_LEN = 256
     BATCH_SIZE = 128
 
