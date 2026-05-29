@@ -95,11 +95,11 @@ def weeknd_training_word(data_path:str,epochs:int= 4000, device= DEVICE):
     H = 8
     N = 4
     CONTEXT_LEN = 256
-    BATCH_SIZE = 256
+    BATCH_SIZE = 64
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-3)
+    optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
     loss_fn = nn.CrossEntropyLoss()
 
     wandb.init(project = "WeekndGPT")
