@@ -161,19 +161,19 @@ def weeknd_training_word(data_path:str,epochs:int= 4000, device= DEVICE):
 if __name__ == "__main__":
     
     path = r"data/weeknd.txt"
-    # weeknd_training_word(path, epochs=4000, device = DEVICE)
+    weeknd_training_word(path, epochs=4000, device = DEVICE)
 
-    from data import get_tokens_word
-    train_data, val_data, vocab_size, encode, decode  = get_tokens_word(path)
+    # from data import get_tokens_word
+    # train_data, val_data, vocab_size, encode, decode  = get_tokens_word(path)
 
-    # Initializing Params
-    VOCAB_SIZE = vocab_size
-    D_MODEL = 384
-    H = 6
-    N = 6
-    CONTEXT_LEN = 128
-    BATCH_SIZE = 32
-    model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN)
-    total_params = sum(p.numel() for p in model.parameters())
-    print(f"Parameters: {total_params:,}")
+    # # Initializing Params
+    # VOCAB_SIZE = vocab_size
+    # D_MODEL = 384
+    # H = 6
+    # N = 6
+    # CONTEXT_LEN = 128
+    # BATCH_SIZE = 32
+    # model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN)
+    # total_params = sum(p.numel() for p in model.parameters())
+    # print(f"Parameters: {total_params:,}")
     
