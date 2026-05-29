@@ -84,23 +84,22 @@ def weeknd_training_character(data_path:str,epochs:int= 3000, device= DEVICE):
     wandb.finish()
 
 
-def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
+def weeknd_training_word(data_path:str,epochs:int= 4000, device= DEVICE):
     torch.manual_seed(42)
     
     train_data, val_data, vocab_size, encode, decode  = get_tokens_word(data_path)
 
     # Initializing Params
     VOCAB_SIZE = vocab_size
-    D_MODEL = 768
-    H = 12
-    N = 12
-    CONTEXT_LEN = 128
+    D_MODEL = 192
+    H = 6
+    N = 4
+    CONTEXT_LEN = 256
     BATCH_SIZE = 128
 
     model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(device)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr = 1e-3)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     loss_fn = nn.CrossEntropyLoss()
 
     wandb.init(project = "WeekndGPT")
@@ -122,7 +121,6 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        scheduler.step()
         model.eval()
 
         x_test, y_test = get_batch(val_data, batch_size= BATCH_SIZE, context_len= CONTEXT_LEN)
@@ -163,19 +161,19 @@ def weeknd_training_word(data_path:str,epochs:int= 3000, device= DEVICE):
 if __name__ == "__main__":
     
     path = r"data/weeknd.txt"
-    weeknd_training_character(path, epochs=3000, device = DEVICE)
+    # weeknd_training_word(path, epochs=4000, device = DEVICE)
 
-    # from data import get_tokens_character
-    # train_data, val_data, vocab_size, encode, decode  = get_tokens_character(path)
+    from data import get_tokens_word
+    train_data, val_data, vocab_size, encode, decode  = get_tokens_word(path)
 
-    # # Initializing Params
-    # VOCAB_SIZE = vocab_size
-    # D_MODEL = 256
-    # H = 8
-    # N = 4
-    # CONTEXT_LEN = 512
-    # BATCH_SIZE = 128
-    # model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN)
-    # total_params = sum(p.numel() for p in model.parameters())
-    # print(f"Parameters: {total_params:,}")
+    # Initializing Params
+    VOCAB_SIZE = vocab_size
+    D_MODEL = 384
+    H = 6
+    N = 6
+    CONTEXT_LEN = 128
+    BATCH_SIZE = 32
+    model = GPT(vocab_size= VOCAB_SIZE, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN)
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Parameters: {total_params:,}")
     
