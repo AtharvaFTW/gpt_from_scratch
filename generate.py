@@ -35,7 +35,30 @@ def generate(model, seed_text, max_new_tokens, context_len, device = DEVICE, enc
 
     return res
 
-def weeknd_generate(model, seed_text, max_new_tokens, context_len, encode, decode,temperature, device = DEVICE):
+
+def weeknd_generate_word(model, seed_text, max_new_tokens, context_len, encode, decode,temperature, device = DEVICE):
+    context = encode(seed_text)
+    context = torch.tensor(context, dtype = torch.long).unsqueeze(dim =0).to(device)
+    model.eval()
+    if seed_text:
+        for i in range(max_new_tokens):
+
+            logits = model(context[:, -context_len:])
+            probs = torch.softmax(logits[:, -1, :] / temperature, dim = -1)
+            next_token = torch.multinomial(probs, num_samples=1)
+
+            context = torch.cat([context, next_token], dim = 1)
+
+        context = context.squeeze(0)
+        context = context.tolist()
+
+        res = decode(context)
+
+        return res
+    return ""
+
+
+def weeknd_generate_character(model, seed_text, max_new_tokens, context_len, encode, decode,temperature, device = DEVICE):
 
     context = encode(seed_text)
     context = torch.tensor(context, dtype = torch.long).unsqueeze(dim =0).to(device)
@@ -65,14 +88,14 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type = str)
 
     args= parser.parse_args()
-    from data import get_tokens_character
+    from data import get_tokens_character, get_tokens_word
 
-    _ , _, vc, encode, decode = get_tokens_character(r"data/weeknd.txt")
+    _ , _, vc, encode, decode = get_tokens_word(r"data/weeknd.txt")
 
     model = GPT(vocab_size= vc, d_model= D_MODEL, h= H, N= N, context_len= CONTEXT_LEN).to(DEVICE)
-    model.load_state_dict(torch.load("final_weights.pt"))
+    model.load_state_dict(torch.load("weights_at_2400_word.pt"))
 
     
     # enc = tiktoken.get_encoding("gpt2")
-    output = weeknd_generate(model, args.seed, max_new_tokens= 200, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
+    output = weeknd_generate_word(model, args.seed, max_new_tokens= 100, context_len= CONTEXT_LEN,temperature=0.7, encode = encode, decode = decode)
     print(output)
