@@ -51,13 +51,12 @@ Epoch: 900
 
 Trained on custom corpus of 300+ Weeknd songs using a character-level and a word-level tokenizer.
 
-Loss Curves
 
 [![Train Loss](images/train.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 [![Test Loss](images/test.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 
 
-| HyperParameters | Character Token | Word Token |
+| Hyperarameters | Character Token | Word Token |
 |---|---|---|
 | *d_model* | 256 | 256 |
 | *H* | 8 | 8 |
@@ -70,6 +69,7 @@ Loss Curves
 #### Findings
 
 | Approach | Vocab Size | Tokens | Notes |
+|---|---|---|---|
 | Character-level | 167 | 819K | Character-level performed slightly better than word-level given the same amount of data |
 | Word-level | 5421 | 144K | Data starvation — too few examples per word for a 5421-word vocabulary |
 
@@ -78,6 +78,17 @@ Word-level tokenization often superior to the character-level requires significa
 
 **Generated Samples**
 
+seed: `doctor told me to stop`
+[![Character Level](images/examples/c/3.PNG)]
+[![Word Level](images/examples/w/word2.PNG)]
+
+seed: `I am intoxicated`
+[![Character Level](images/examples/c/1.PNG)]
+[![Word Level](images/examples/w/word3.PNG)]
+
+seed: `I dont care about you why you worried about me`
+[![Character Level](images/examples/c/4.PNG)]
+[![Word Level](images/examples/w/wor4.PNG)]
 
 
 
