@@ -89,7 +89,7 @@ Word-level tokenization often superior to the character-level requires significa
 
 **seed:** `I am intoxicated`
 
-- Character Level
+- Character Level          
 ![Character Level](images/examples/c/1.PNG)
 - Word Level
 ![Word Level](images/examples/w/word3.PNG)
