@@ -59,6 +59,7 @@ Loss Curves
 **HyperParameters**
 
 | | Character Token | Word Token |
+|---|---|---|
 | *d_model* | 256 | 256 |
 | *H* | 8 | 8 |
 | *N* | 4 | 4 |
