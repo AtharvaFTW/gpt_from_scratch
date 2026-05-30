@@ -55,6 +55,8 @@ Trained on custom corpus of 300+ Weeknd songs using a character-level and a word
 [![Train Loss](images/train.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 [![Test Loss](images/test.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 
+[*Interactive report here ->*](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
+
 
 | Hyperarameters | Character Token | Word Token |
 |---|---|---|
@@ -76,7 +78,7 @@ Trained on custom corpus of 300+ Weeknd songs using a character-level and a word
 Word-level tokenization often superior to the character-level requires significantly more data to work. With only 144K tokens across a 5421 word vocab, most words appeared too infrequenctly for the model to capture the meaningful context. Character-level takes the win for small corpus by reducing the vocabulary to 167 characters, giving the model 819k training examples to learn from.
 
 
-**Generated Samples**
+#### Generated Samples
 
 **seed:** `doctor told me to stop`
 
@@ -104,5 +106,23 @@ Word-level tokenization often superior to the character-level requires significa
 #### Word Level
 ![Word Level](images/examples/w/word4.PNG)
 
+
+### Limitations
+
+**Context Degradation:** The Generation quality for Character level degrades after ~150 tokens(characters). Corpus capacity is the bottleneck limiting us to a miniature model — not a bug.
+
+## Whats Next? — R&B GPT
+
+- Scrape Drake, SZA, Partynextdoor, Nav, Chris Brown
+- Combine these artist with The Weeknd Corpus
+
+This will allow the word-level tokenizer to use it's full potential.
+
+### Training Platform & Infrastructure
+
+- **Platform:** Google Cloud (GCP)
+- **Hardware:** L4 GPU (24GB VRAM)
+- **Experiment Tracking:** Weights & Biases for tracking and artifact saving for model weights.
+- **Logging:** Train/Test loss per epoch, W&B report linked above.
 
 
