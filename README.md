@@ -78,17 +78,22 @@ Word-level tokenization often superior to the character-level requires significa
 
 **Generated Samples**
 
-seed: `doctor told me to stop`
-[![Character Level](images/examples/c/3.PNG)]
-[![Word Level](images/examples/w/word2.PNG)]
+**seed:** `doctor told me to stop`
 
-seed: `I am intoxicated`
-[![Character Level](images/examples/c/1.PNG)]
-[![Word Level](images/examples/w/word3.PNG)]
+![Character Level](images/examples/c/3.PNG)
+![Word Level](images/examples/w/word2.PNG)
 
-seed: `I dont care about you why you worried about me`
-[![Character Level](images/examples/c/4.PNG)]
-[![Word Level](images/examples/w/wor4.PNG)]
+
+**seed:** `I am intoxicated`
+
+![Character Level](images/examples/c/1.PNG)
+![Word Level](images/examples/w/word3.PNG)
+
+
+**seed:** `I dont care about you why you worried about me`
+
+![Character Level](images/examples/c/4.PNG)
+![Word Level](images/examples/w/wor4.PNG)
 
 
 
