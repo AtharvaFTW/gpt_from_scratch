@@ -56,9 +56,8 @@ Loss Curves
 [![Train Loss](images/train.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 [![Test Loss](images/test.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 
-**HyperParameters**
 
-| | Character Token | Word Token |
+| HyperParameters | Character Token | Word Token |
 |---|---|---|
 | *d_model* | 256 | 256 |
 | *H* | 8 | 8 |
