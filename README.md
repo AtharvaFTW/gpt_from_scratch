@@ -65,6 +65,7 @@ Trained on custom corpus of 300+ Weeknd songs using a character-level and a word
 | *context_len* | 256 | 256 |
 | *batch_size* | 256 | 64 |
 | *num_epochs* | 3000 | 3000 |
+ *lr* | 3e-4 | 3e-4 |
 
 
 #### Findings
