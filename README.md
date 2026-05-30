@@ -55,7 +55,7 @@ Trained on custom corpus of 300+ Weeknd songs using a character-level and a word
 [![Train Loss](images/train.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 [![Test Loss](images/test.svg)](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 
-[*Interactive report here ->*](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
+*Interactive report here ->* [W&B Report](https://api.wandb.ai/links/atharva84-none/zsszi3ao)
 
 | Hyperparameters | Character Token | Word Token |
 |---|---|---|
